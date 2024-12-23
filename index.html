@@ -4,72 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Watch Together</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-    #video-container { margin: 20px; }
-    iframe { width: 80%; height: 400px; border: 2px solid #ccc; border-radius: 10px; }
-    #chat-container { margin: 20px; display: inline-block; text-align: left; width: 80%; }
-    #messages { height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px; }
-    #message-input { display: flex; margin-top: 10px; }
-    #message-input input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px 0 0 5px; }
-    #message-input button { padding: 10px; border: none; background: #007BFF; color: white; cursor: pointer; border-radius: 0 5px 5px 0; }
-    #message-input button:hover { background: #0056b3; }
-    #username-input { margin: 10px 0; }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Watch Together</h1>
+  <div class="container">
+    <!-- Google Drive Video Embed -->
+    <iframe 
+      id="videoPlayer" 
+      src="https://www.youtube.com/embed/d1n552v1ng0" 
+      width="640" 
+      height="360" 
+      allow="autoplay" 
+      allowfullscreen>
+    </iframe>
 
-  <!-- Username Section -->
-  <div id="username-input">
-    <input type="text" id="username" placeholder="Enter your name" />
-    <button onclick="changeUsername()">Change Name</button>
-  </div>
+    <div class="chat-container">
+      <div id="chatBox"></div>
+      <input id="chatInput" type="text" placeholder="Type a message..." />
+      <button id="sendButton">Send</button>
+    </div>
 
-  <!-- Video Container with iframe -->
-  <div id="video-container">
-    <iframe id="video-player" src="https://www.youtube.com/embed/d1n552v1ng0" frameborder="0" allowfullscreen></iframe>
-  </div>
-
-  <div id="chat-container">
-    <div id="messages"></div>
-    <div id="message-input">
-      <input type="text" id="chat-message" placeholder="Type your message..." />
-      <button onclick="sendMessage()">Send</button>
+    <div class="voice-chat">
+      <button id="joinVoiceChat">Join Voice Chat</button>
     </div>
   </div>
-
-  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-  <script>
-    const messages = document.getElementById('messages');
-    const chatMessage = document.getElementById('chat-message');
-    const usernameInput = document.getElementById('username');
-
-    let username = "Anonymous"; // Default username
-
-    // Connect to the backend using Socket.io
-    // Replace with your Render backend URL
-
-    // Chat functionality
-    socket.on('message', (msg) => {
-      const messageElement = document.createElement('div');
-      const usernameElement = document.createElement('strong');
-      usernameElement.textContent = msg.username; // Display the sender's username
-      messageElement.appendChild(usernameElement);
-      messageElement.appendChild(document.createTextNode(`: ${msg.message}`));
-      messages.appendChild(messageElement);
-    });
-
-    function sendMessage() {
-      const message = chatMessage.value;
-      socket.emit('message', { username, message }); // Send the username along with the message
-      chatMessage.value = '';
-    }
-
-    function changeUsername() {
-      username = usernameInput.value.trim() || "Anonymous"; // Set username or use "Anonymous" if empty
-      alert(`Username changed to: ${username}`);
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
