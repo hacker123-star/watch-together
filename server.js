@@ -1,30 +1,33 @@
 const express = require('express');
 const http = require('http');
-const { Server } = require('socket.io');
+const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = socketIo(server);
 
-app.use(express.static('public')); // Serve static files if needed
+app.use(express.static('public'));
+
+let users = [];
 
 io.on('connection', (socket) => {
   console.log('A user connected');
 
+  // Handle video sync actions
   socket.on('video-action', (data) => {
-    socket.broadcast.emit('video-action', data); // Sync video
+    socket.broadcast.emit('video-action', data); // Broadcast video actions to others
   });
 
+  // Handle messages
   socket.on('message', (msg) => {
-    io.emit('message', msg); // Broadcast chat messages
+    io.emit('message', msg); // Broadcast messages to all users
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    console.log('User disconnected');
   });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
 });
